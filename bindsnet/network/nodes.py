@@ -442,14 +442,14 @@ class LIFNodes(Nodes):
         shape: Optional[Iterable[int]] = None,
         traces: bool = False,
         traces_additive: bool = False,
-        tc_trace: Union[float, torch.Tensor] = 20.0,
+        tc_trace: Union[float, torch.Tensor] = 20.0,    #
         trace_scale: Union[float, torch.Tensor] = 1.0,
         sum_input: bool = False,
-        thresh: Union[float, torch.Tensor] = -52.0,
+        thresh: Union[float, torch.Tensor] = -52.0,     #
         rest: Union[float, torch.Tensor] = -65.0,
-        reset: Union[float, torch.Tensor] = -65.0,
-        refrac: Union[int, torch.Tensor] = 5,
-        tc_decay: Union[float, torch.Tensor] = 100.0,
+        reset: Union[float, torch.Tensor] = -65.0,      #
+        refrac: Union[int, torch.Tensor] = 5,           #
+        tc_decay: Union[float, torch.Tensor] = 100.0,   #
         lbound: float = None,
         **kwargs,
     ) -> None:

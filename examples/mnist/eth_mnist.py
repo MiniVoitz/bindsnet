@@ -42,11 +42,10 @@ parser.add_argument("--train", dest="train", action="store_true")
 parser.add_argument("--test", dest="train", action="store_false")
 parser.add_argument("--plot", dest="plot", action="store_true")
 parser.add_argument("--gpu", dest="gpu", action="store_true")
-parser.set_defaults(plot=False, gpu=False, train = True)
+parser.set_defaults(plot=True, gpu=True)
 
 args = parser.parse_args()
 
-save_as = "eth_test"
 seed = args.seed
 n_neurons = args.n_neurons
 n_epochs = args.n_epochs
@@ -279,7 +278,6 @@ for epoch in range(n_epochs):
 print("Progress: %d / %d (%.4f seconds)" % (epoch + 1, n_epochs, t() - start))
 print("Training complete.\n")
 
-"""
 # Load MNIST data.
 test_dataset = MNIST(
     PoissonEncoder(time=time, dt=dt),
@@ -347,16 +345,3 @@ print("Proportion weighting accuracy: %.2f \n" % (accuracy["proportion"] / n_tes
 
 print("Progress: %d / %d (%.4f seconds)" % (epoch + 1, n_epochs, t() - start))
 print("Testing complete.\n")
-
-"""
-
-train_time = t()-start
-network.save(f"./net_{save_as}.pt")   # added
-train_details = {"assignments": assignments, "proportions": proportions, "rates": rates,"train_accur":accuracy, "train_time": train_time}
-torch.save(train_details, f"./details_{save_as}.pt")
-
-print("Progress: %d / %d (%.4f seconds)" % (epoch + 1, n_epochs, train_time))
-print("Training complete.\n")
-
-
-

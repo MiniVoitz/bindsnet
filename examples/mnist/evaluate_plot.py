@@ -28,14 +28,14 @@ from bindsnet.network import Network, load
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--seed", type=int, default=0)
-parser.add_argument("--n_neurons", type=int, default=1000)
+parser.add_argument("--n_neurons", type=int, default=100)
 parser.add_argument("--n_epochs", type=int, default=1)
-parser.add_argument("--n_test", type=int, default=10000)
+parser.add_argument("--n_test", type=int, default=10)
 parser.add_argument("--n_train", type=int, default=60000)
 parser.add_argument("--exc", type=float, default=22.5)
 parser.add_argument("--inh", type=float, default=120)
 parser.add_argument("--theta_plus", type=float, default=0.05)
-parser.add_argument("--time", type=int, default=250)
+parser.add_argument("--time", type=int, default=200)
 parser.add_argument("--dt", type=int, default=1.0)
 parser.add_argument("--intensity", type=float, default=128)
 parser.add_argument("--progress_interval", type=int, default=10)
@@ -44,9 +44,14 @@ parser.add_argument("--train", dest="train", action="store_true")
 parser.add_argument("--test", dest="train", action="store_false")
 parser.add_argument("--plot", dest="plot", action="store_true")
 parser.add_argument("--gpu", dest="gpu", action="store_true")
-parser.add_argument("--saved_as")
 parser.set_defaults(plot=True, gpu=False, train="False", n_test=10000 ) 
+
+
+parser.add_argument("--saved", type=str, default = "test")
+
 args = parser.parse_args()
+
+saved_as = args.saved
 
 seed = args.seed
 n_neurons = args.n_neurons
@@ -64,7 +69,7 @@ update_interval = args.update_interval
 train = args.train
 plot = args.plot
 gpu = args.gpu
-saved_as = args.saved_as # "exp_26"
+
 
 #================================================
 # Sets up Gpu use (not used)
@@ -87,14 +92,14 @@ n_sqrt = int(np.ceil(np.sqrt(n_neurons)))
 start_intensity = intensity
 
 # Load pre-trained network
-network = load(f"net_{saved_as}.pt")
+network = load(f"./Results/net_{saved_as}.pt")
 network.train(mode=False)
 
 if gpu:
     network.to("cuda")
 
 # Load assignments, obtained while training
-train_details = torch.load(f"./details_{saved_as}.pt", map_location=torch.device(device))
+train_details = torch.load(f"./Results/details_{saved_as}.pt", map_location=torch.device(device))
 
 # Assign the variables from the loaded dictionary
 assignments = train_details["assignments"]
@@ -137,9 +142,11 @@ spike_record = torch.zeros((1, int(time / dt), n_neurons), device=device)
 
 #==================================================================================
 #*************************  Testing the network ***********************************
-'''
+
 print("\nBegin testing\n")
+
 start = t()
+
 
 pbar = tqdm(total=n_test)
 for step, batch in enumerate(test_dataset):
@@ -183,26 +190,25 @@ for step, batch in enumerate(test_dataset):
 print("\nAll activity accuracy:         %.2f \n" % (100*accuracy["all"] / n_test))
 print("Proportion weighting accuracy:   %.2f \n" % (100*accuracy["proportion"] / n_test))
 print("Testing complete after:          %.4f seconds \n" % (t() - start))
-'''
+
 #==================================================================================
 #**********************************  Ploting **************************************
-print("#of evaluation steps: \n",len(train_details["train_accur"]["all"]))
-print("training time: \n", train_details['train_time'])
-#print("training accur: \n", train_details["train_accur"])
-print("average of last 10 accuracies (all): \n", np.mean(train_details["train_accur"]["all"][-10:]))
+
+print("training time", train_details['train_time'])
+print(train_details["train_accur"])
 
 #extract weights
 input_exc_weights = network.connections[("X", "Ae")].w
 square_weights = get_square_weights( input_exc_weights.view(784, n_neurons), n_sqrt, 28 )
 square_assignments = get_square_assignments(assignments, n_sqrt)
 train_accur = train_details["train_accur"]
-train_accur_prop = {"Accuracy": train_accur["proportion"]} # creat a dict to plot only "proportion"
-
 
 #plot
 weights_im = plot_weights(square_weights, im=None)
 assigns_im = plot_assignments(square_assignments, im=None)
-#perf_ax = plot_performance(train_accur, x_scale=update_interval, ax=None) # plot both accrucies
-perf_ax = plot_performance(train_accur_prop, x_scale=update_interval, ax=None) # plot only proportion 
+perf_ax = plot_performance(train_accur, x_scale=update_interval, ax=None)
 plt.pause(300)
+
+
+
 

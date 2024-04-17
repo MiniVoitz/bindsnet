@@ -25,33 +25,36 @@ from bindsnet.network.monitors import Monitor
 from bindsnet.utils import get_square_assignments, get_square_weights
 
 parser = argparse.ArgumentParser()
-parser.add_argument("--seed", type=int, default=0)
-parser.add_argument("--n_neurons", type=int, default=100)
-parser.add_argument("--n_epochs", type=int, default=1)
-parser.add_argument("--n_test", type=int, default=10000)
-parser.add_argument("--n_train", type=int, default=60000)
-parser.add_argument("--n_workers", type=int, default=-1)
-parser.add_argument("--exc", type=float, default=22.5)
-parser.add_argument("--inh", type=float, default=120)
-parser.add_argument("--theta_plus", type=float, default=0.05)
-parser.add_argument("--time", type=int, default=250)
-parser.add_argument("--dt", type=int, default=1.0)
-parser.add_argument("--intensity", type=float, default=128)
-parser.add_argument("--progress_interval", type=int, default=10)
-parser.add_argument("--update_interval", type=int, default=250) 
+parser.add_argument("--seed", type=int, default=0)                  # For the random
+parser.add_argument("--n_neurons", type=int, default=100)           # Input neurons
+parser.add_argument("--n_epochs", type=int, default=1)              # Number of time we are looking to each pic => careful : overfitting
+parser.add_argument("--n_test", type=int, default=10000)            # Testing pictures number
+parser.add_argument("--n_train", type=int, default=60000)           # Training pictures number
+parser.add_argument("--n_workers", type=int, default=-1)            # Parallelisation => -1 = PyTorch is optimising as possible
+parser.add_argument("--exc", type=float, default=22.5)              # Strength of synapse weights from excitatory to inhibitory layer
+parser.add_argument("--inh", type=float, default=120)               # Strength of synapse weights from inhibitory to excitatory layer
+parser.add_argument("--theta_plus", type=float, default=0.05)       # 
+parser.add_argument("--time", type=int, default=250)                # Time looking at each pics
+parser.add_argument("--dt", type=int, default=1.0)                  # Simulation step
+parser.add_argument("--intensity", type=float, default=128)         # Permet une normalisation du codage des pixels ?? à tester
+parser.add_argument("--progress_interval", type=int, default=10)    # Inteval progression (print the % of progression)
+parser.add_argument("--update_interval", type=int, default=250)     # On actualise notre Network update_interval image
 # adding/not adding --train to CL makes args.train true/false 
-parser.add_argument("--train", dest="train", action="store_true")  
-parser.add_argument("--test", dest="train", action="store_false")
-parser.add_argument("--plot", dest="plot", action="store_true")
-parser.add_argument("--gpu", dest="gpu", action="store_true")
-parser.add_argument("--save_as")
+parser.add_argument("--train", dest="train", action="store_true")   # 
+parser.add_argument("--test", dest="train", action="store_false")   #
+parser.add_argument("--plot", dest="plot", action="store_true")     #
+parser.add_argument("--gpu", dest="gpu", action="store_true")       #
 # But if none of the four is added, these are the default ones:
-parser.set_defaults(plot=False, gpu=False, train="True") 
+parser.set_defaults(plot=False, gpu=False, train="True")            #
+#Changing the parameter of the Bi-Simoïde
+# where to save the simulation ? 
+parser.add_argument("--save", type=str, default = "test")
+
 args = parser.parse_args()
 
 print(args)
-save_as = args.save_as #"exp_31"
 
+save_as = args.save
 seed = args.seed
 n_neurons = args.n_neurons
 n_epochs = args.n_epochs
@@ -115,11 +118,12 @@ train_dataset = MNIST(
     download=True,
     train=True,
     transform=transforms.Compose(
-        [transforms.ToTensor(), transforms.Lambda(lambda x: x * intensity)]    # intensity = 128
+        [transforms.ToTensor(), transforms.Lambda(lambda x: x * intensity)]    # intensity = 128 
     ),
 )
 
-# Record spikes during the simulation.
+
+# Record spikes during the simulation. (Initialise un tenseur avec les bonnes dimension)
 spike_record = torch.zeros((update_interval, int(time / dt), n_neurons), device=device)
 
 # Neuron assignments and spike proportions.
@@ -202,10 +206,11 @@ for epoch in range(n_epochs):
     dataloader = torch.utils.data.DataLoader(
         train_dataset, batch_size=1, shuffle=True, num_workers=n_workers, pin_memory=gpu)
 
+#tqdm = affichage d'une barre de progression
     for step, batch in enumerate(tqdm(dataloader)):
-        if step > n_train:
+        if step > n_train: #On ne parcourt pas les 60000 images du MNIST
             break
-        # Get next input sample.
+        # Get next input sample. On stock dans un dictionnaire es valeur : int(time / dt) = repeat the same image (28x28) during int(time / dt) 
         inputs = {"X": batch["encoded_image"].view(int(time / dt), 1, 1, 28, 28)}
         if gpu:
             inputs = {k: v.cuda() for k, v in inputs.items()}
@@ -315,9 +320,11 @@ for epoch in range(n_epochs):
         network.reset_state_variables()  # Reset state variables.
 
 train_time = t()-start
-network.save(f"./net_{save_as}.pt")   # added
+network.save(f"./Results/net_{save_as}.pt")   # added
 train_details = {"assignments": assignments, "proportions": proportions, "rates": rates,"train_accur":accuracy, "train_time": train_time}
-torch.save(train_details, f"./details_{save_as}.pt")
+torch.save(train_details, f"./Results/details_{save_as}.pt")
+print("")
+print("Results in: C:\\Users\\Tomvo\\Labwork\\bindsnet\\examples\\mnist\\Results")
 
 print("Progress: %d / %d (%.4f seconds)" % (epoch + 1, n_epochs, train_time))
 print("Training complete.\n")

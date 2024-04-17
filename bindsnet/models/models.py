@@ -267,7 +267,7 @@ class Salah_model(Network):
             traces=True,
             rest= -65.0,
             reset= -60.0,
-            thresh= -52.0,
+            thresh= -52.0, #A tester
             refrac=5,
             tc_decay=100.0,
             tc_trace=20.0,
@@ -277,12 +277,12 @@ class Salah_model(Network):
         inh_layer = LIFNodes(
             n=self.n_neurons,
             traces=False,
-            rest=-60.0,
-            reset=-45.0,
-            thresh=-40.0,
-            refrac=2,
-            tc_decay=10.0,    
-            tc_trace=20.0,
+            rest = -60.0,       #Simulate
+            reset = -45.0,      #Simulate
+            thresh = -40.0,     #Simulate
+            refrac = 2,
+            tc_decay = 10.0,    #Simulate?
+            tc_trace = 20.0,    #Simulate?
         )
 
         # Connections
