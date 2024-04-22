@@ -37,6 +37,10 @@ parser.add_argument("--theta_plus", type=float, default=0.05)       #
 parser.add_argument("--time", type=int, default=250)                # Time looking at each pics
 parser.add_argument("--dt", type=int, default=1.0)                  # Simulation step
 parser.add_argument("--intensity", type=float, default=128)         # Permet une normalisation du codage des pixels ?? à tester
+
+parser.add_argument("--thresh_exc", type=float, default = -52)
+parser.add_argument("--thresh_inh", type=float, default = -40)
+
 parser.add_argument("--progress_interval", type=int, default=10)    # Inteval progression (print the % of progression)
 parser.add_argument("--update_interval", type=int, default=250)     # On actualise notre Network update_interval image
 # adding/not adding --train to CL makes args.train true/false 
@@ -49,6 +53,7 @@ parser.set_defaults(plot=False, gpu=False, train="True")            #
 #Changing the parameter of the Bi-Simoïde
 # where to save the simulation ? 
 parser.add_argument("--save", type=str, default = "test")
+
 
 args = parser.parse_args()
 
@@ -72,6 +77,9 @@ update_interval = args.update_interval
 train = args.train
 plot = args.plot
 gpu = args.gpu
+
+thresh_exc = args.thresh_exc 
+thresh_inh = args.thresh_inh
 
 
 # Sets up Gpu use
@@ -104,6 +112,8 @@ network = Salah_model(
     norm=78.4,
     theta_plus=theta_plus,
     inpt_shape=(1, 28, 28),
+    thresh_exc_layer = thresh_exc,
+    thresh_inh_layer = thresh_inh,
 )
 
 # Directs network to GPU

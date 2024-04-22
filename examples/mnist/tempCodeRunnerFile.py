@@ -1,0 +1,1 @@
+for intensity in range(30,100,15):
