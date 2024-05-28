@@ -22,10 +22,10 @@ import os
 print("Start Simulation n_train")
 
 fic_name = "no_change"  #So we have sth to compare with
-simulation = f"python salah_example.py --save {fic_name} --n_train 60000"
-evaluation = f"python evaluate_plot.py --saved {fic_name}"
+simulation = f"python3 salah_example.py --save {fic_name} --n_train 60000"
+evaluation = f"python3 evaluate_plot.py --saved {fic_name}"
 
-if os.path.exists(f"..\\Results\\net_{fic_name}.pt"):
+if os.path.exists(f"Results/net_{fic_name}.pt"):
     try:
         print("Base test already done")
     except sb.CalledProcessError as e:
@@ -51,9 +51,9 @@ print("Start Simulation time")
 
 for n_time_value in range(100, 400, 50): #vary from 100 to 400 or even more?
     fic_name = f"time_var_{n_time_value}"
-    simulation = f"python salah_example.py --n_train {n_train_best_value} --time {n_time_value} --save {fic_name}"
-    evaluation = f"python evaluate_plot.py --n_train {n_train_best_value} --time {n_time_value} --saved {fic_name}"
-    if os.path.exists(f"..\\Results\\net_{fic_name}.pt"): 
+    simulation = f"python3 salah_example.py --n_train {n_train_best_value} --time {n_time_value} --save {fic_name}"
+    evaluation = f"python3 evaluate_plot.py --n_train {n_train_best_value} --time {n_time_value} --saved {fic_name}"
+    if os.path.exists(f"Results/net_{fic_name}.pt"): 
         try:
             print(f"Simulation n_time_value = {n_time_value} already done")
         except sb.CalledProcessError as e:
@@ -61,7 +61,7 @@ for n_time_value in range(100, 400, 50): #vary from 100 to 400 or even more?
     else:
         try:
             print(f"Start simulation for {n_time_value}")
-            sb.run(simulation, shell=True)
+            #sb.run(simulation, shell=True)
         except sb.CalledProcessError as e:
             print(f"Command execution error: : {e}")  
     print(f"Fin simulation {n_time_value}")
@@ -81,9 +81,9 @@ print("End Simulation n_train")
 # 22.5 de base
 for exc_value in range(15,30,5): #faire varier de 15 à 30
     fic_name = f"exc_value_{exc_value}"
-    simulation = f"python salah_example.py --n_train {n_train_best_value} --time {time_best_value} --exc {exc_value}  --save {fic_name}"
-    evaluation = f"python evaluate_plot.py --n_train {n_train_best_value} --time {time_best_value} --saved {fic_name}"
-    if os.path.exists(f"..\\Results\\net_{fic_name}.pt"): 
+    simulation = f"python3 salah_example.py --n_train {n_train_best_value} --time {time_best_value} --exc {exc_value}  --save {fic_name}"
+    evaluation = f"python3 evaluate_plot.py --n_train {n_train_best_value} --time {time_best_value} --saved {fic_name}"
+    if os.path.exists(f"Results/net_{fic_name}.pt"): 
         try:
             print(f"Simulation exc_value = {exc_value} already done")
         except sb.CalledProcessError as e:
@@ -91,7 +91,7 @@ for exc_value in range(15,30,5): #faire varier de 15 à 30
     else:
         try:
             print(f"Simulation exc_value = {exc_value}")
-            sb.run(simulation, shell=True)
+            #sb.run(simulation, shell=True)
         except sb.CalledProcessError as e:
             print(f"Command execution error: : {e}")  
     print(f"Fin simulation {exc_value}")
@@ -107,9 +107,9 @@ exc_best_value = 22.5 #Not that much variation
 for theta_plus in (0.3,0.25):
     print(f"Start simulation {theta_plus}")
     fic_name = f"theta_plus_value_{theta_plus}"
-    simulation = f"python salah_example.py --n_train {n_train_best_value} --time {time_best_value} --theta_plus {theta_plus}  --save {fic_name}"
-    evaluation = f"python evaluate_plot.py --n_train {n_train_best_value} --time {time_best_value} --saved {fic_name}"
-    if os.path.exists(f"..\\Results\\net_{fic_name}.pt"): 
+    simulation = f"python3 salah_example.py --n_train {n_train_best_value} --time {time_best_value} --theta_plus {theta_plus}  --save {fic_name}"
+    evaluation = f"python3 evaluate_plot.py --n_train {n_train_best_value} --time {time_best_value} --saved {fic_name}"
+    if os.path.exists(f"Results/net_{fic_name}.pt"): 
         try:
             print(f"Simulation theta_plus = {theta_plus} already done")
         except sb.CalledProcessError as e:
@@ -117,7 +117,7 @@ for theta_plus in (0.3,0.25):
     else:
         try:
             print(f"Simulation theta_plus = {theta_plus}")
-            sb.run(simulation, shell=True)
+            #sb.run(simulation, shell=True)
         except sb.CalledProcessError as e:
             print(f"Command execution error: : {e}")  
     print(f"Fin simulation {theta_plus}")
@@ -130,9 +130,9 @@ for theta_plus in (0.3,0.25):
 for inh_value in range(100,140,10): #faire varier de 15 à 30
     print(f"Start simulation {inh_value}")
     fic_name = f"inh_value_{inh_value}"
-    simulation = f"python salah_example.py --n_train {n_train_best_value} --time {time_best_value} --inh {inh_value}  --save {fic_name}"
-    evaluation = f"python evaluate_plot.py --n_train {n_train_best_value} --time {time_best_value} --saved {fic_name}"
-    if os.path.exists(f"..\\Results\\net_{fic_name}.pt"): 
+    simulation = f"python3 salah_example.py --n_train {n_train_best_value} --time {time_best_value} --inh {inh_value}  --save {fic_name}"
+    evaluation = f"python3 evaluate_plot.py --n_train {n_train_best_value} --time {time_best_value} --saved {fic_name}"
+    if os.path.exists(f"Results/net_{fic_name}.pt"): 
         try:
             print(f"Simulation inh_value = {inh_value} already done")
         except sb.CalledProcessError as e:
@@ -140,7 +140,7 @@ for inh_value in range(100,140,10): #faire varier de 15 à 30
     else:
         try:
             print(f"Simulation inh_value = {inh_value}")
-            sb.run(simulation, shell=True)
+            #sb.run(simulation, shell=True)
         except sb.CalledProcessError as e:
             print(f"Command execution error: : {e}")  
     print(f"Fin simulation {inh_value}")
@@ -154,9 +154,9 @@ for inh_value in range(100,140,10): #faire varier de 15 à 30
 for intensity in range(60,90,5):
     print(f"Start simulation {intensity}")
     fic_name = f"intensity_value_{intensity}"
-    simulation = f"python salah_example.py --n_train {n_train_best_value} --time {time_best_value} --intensity {intensity}  --save {fic_name}"
-    evaluation = f"python evaluate_plot.py --n_train {n_train_best_value} --time {time_best_value} --saved {fic_name}"
-    if os.path.exists(f"..\\Results\\net_{fic_name}.pt"): 
+    simulation = f"python3 salah_example.py --n_train {n_train_best_value} --time {time_best_value} --intensity {intensity}  --save {fic_name}"
+    evaluation = f"python3 evaluate_plot.py --n_train {n_train_best_value} --time {time_best_value} --saved {fic_name}"
+    if os.path.exists(f"Results/net_{fic_name}.pt"): 
         try:
             print(f"Simulation intensity = {intensity} already done")
         except sb.CalledProcessError as e:
@@ -164,7 +164,7 @@ for intensity in range(60,90,5):
     else:
         try:
             print(f"Simulation intensity = {intensity}")
-            sb.run(simulation, shell=True)
+            #sb.run(simulation, shell=True)
         except sb.CalledProcessError as e:
             print(f"Command execution error: : {e}")  
     print(f"Fin simulation {intensity}")
@@ -174,12 +174,12 @@ for intensity in range(60,90,5):
 # =============================================================================
 
 #0.05 de base
-for thresh_exc in range(60,90,5):
+for thresh_exc in range(-60,-20,5):
     print(f"Start simulation {thresh_exc}")
-    fic_name = f"intensity_value_{thresh_exc}"
-    simulation = f"python salah_example.py --n_train {n_train_best_value} --time {time_best_value} --thresh_exc {thresh_exc}  --save {fic_name}"
-    evaluation = f"python evaluate_plot.py --n_train {n_train_best_value} --time {time_best_value} --saved {fic_name}"
-    if os.path.exists(f"..\\Results\\net_{fic_name}.pt"): 
+    fic_name = f"thresh_exc_{thresh_exc}"
+    simulation = f"python3 salah_example.py --n_train {n_train_best_value} --time {time_best_value} --thresh_exc {thresh_exc}  --save {fic_name}"
+    evaluation = f"python3 evaluate_plot.py --n_train {n_train_best_value} --time {time_best_value} --saved {fic_name}"
+    if os.path.exists(f"Results/net_{fic_name}.pt"): 
         try:
             print(f"Simulation thresh_exc = {thresh_exc} already done")
         except sb.CalledProcessError as e:
@@ -197,12 +197,12 @@ for thresh_exc in range(60,90,5):
 # =============================================================================
 
 #0.05 de base
-for thresh_inh in range(60,90,5):
+for thresh_inh in range(-60,-20,10):
     print(f"Start simulation {thresh_inh}")
-    fic_name = f"intensity_value_{thresh_inh}"
-    simulation = f"python salah_example.py --n_train {n_train_best_value} --time {time_best_value} --thresh_inh {thresh_inh}  --save {fic_name}"
-    evaluation = f"python evaluate_plot.py --n_train {n_train_best_value} --time {time_best_value} --saved {fic_name}"
-    if os.path.exists(f"..\\Results\\net_{fic_name}.pt"): 
+    fic_name = f"thresh_inh_{thresh_inh}"
+    simulation = f"python3 salah_example.py --n_train {n_train_best_value} --time {time_best_value} --thresh_inh {thresh_inh}  --save {fic_name}"
+    evaluation = f"python3 evaluate_plot.py --n_train {n_train_best_value} --time {time_best_value} --saved {fic_name}"
+    if os.path.exists(f"Results/net_{fic_name}.pt"): 
         try:
             print(f"Simulation thresh_inh = {thresh_inh} already done")
         except sb.CalledProcessError as e:
